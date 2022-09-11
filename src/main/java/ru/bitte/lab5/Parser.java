@@ -94,23 +94,23 @@ public class Parser {
                 ArrayList<String> ignoredTags = new ArrayList<>(Arrays.asList("id", "creationDate", "distance"));
                 routeNodes.removeIf(node -> ignoredTags.contains(node.getNodeName()));
                 // define the list of allowed tags
-                ArrayList<String> allowedTags = new ArrayList<>(Arrays.asList("name", "coordinates", "from", "to"));
+                ArrayList<String> allowedTags = new ArrayList<>(Arrays.asList("coordinates", "from", "name", "to"));
                 ArrayList<String> tagNames = getTagNames(routeNodes); // get the supplied tag names
             /* if the number of supplied tag names is less than or greater than the number of allowed ones,
              an exception is thrown */
+                Collections.sort(tagNames); // allows the elements be in different order (since allowed tags are sorted)
                 if (allowedTags.size() > tagNames.size()) {
                     throw new ElementParsingInFileException("Missing tag names detected in route");
                 } else if (!allowedTags.equals(tagNames)) {
                     throw new ElementParsingInFileException("Duplicate or illegal tag names detected in route");
                 }
-                assert allowedTags.equals(tagNames);
                 // get the fields
                 String name = null;
                 Coordinates coords = null;
                 Location from = null, to = null;
                 // allowed tag for coordinates and location objects
                 ArrayList<String> allowedCoordTags = new ArrayList<>(Arrays.asList("x", "y"));
-                ArrayList<String> allowedLocTags = new ArrayList<>(Arrays.asList("x", "y", "z", "name"));
+                ArrayList<String> allowedLocTags = new ArrayList<>(Arrays.asList("name", "x", "y", "z"));
                 // read the inside nodes of route in a loop
                 for (Node node : routeNodes) {
                     switch (node.getNodeName()) {
@@ -119,12 +119,12 @@ public class Parser {
                             // clear up nodes and confirm them
                             ArrayList<Node> coordNodes = clearUpNodes(node.getChildNodes());
                             ArrayList<String> coordTags = getTagNames(coordNodes);
+                            Collections.sort(coordTags); // allows the elements be in different order
                             if (allowedCoordTags.size() > coordTags.size()) {
                                 throw new ElementParsingInFileException("Missing tag names detected in coordinates");
                             } else if (!coordTags.equals(allowedCoordTags)) {
                                 throw new ElementParsingInFileException("Duplicate or illegal names detected in coordinates");
                             }
-                            assert allowedCoordTags.equals(coordTags);
                             long x = 0, y = 0;
                             // extract them
                             for (Node coordNode : coordNodes) {
@@ -145,12 +145,12 @@ public class Parser {
                             // clear up nodes and confirm them
                             ArrayList<Node> locNodes = clearUpNodes(node.getChildNodes());
                             ArrayList<String> locTags = getTagNames(locNodes);
+                            Collections.sort(locTags); // allows the elements be in different order
                             if (allowedLocTags.size() > locTags.size()) {
                                 throw new ElementParsingInFileException("Missing tag names detected in location");
                             } else if (!locTags.equals(allowedLocTags)) {
                                 throw new ElementParsingInFileException("Duplicate or illegal tag names detected in location");
                             }
-                            assert allowedLocTags.equals(locTags);
                             // extract them
                             long x = 0, y = 0;
                             float z = 0;

@@ -3,7 +3,6 @@ package ru.bitte.lab5;
 import ru.bitte.lab5.route.Route;
 import ru.bitte.lab5.exceptions.GetByIDException;
 
-
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -15,7 +14,7 @@ import java.util.*;
 public class CollectionKeeper {
     private final HashSet<Route> collection; // main collection
     private final LocalDateTime creationDate;
-    private final ArrayList<Route> mirrorList; // mirrors the collection for sorting purposes
+    private final TreeSet<Route> mirror; // mirrors the collection for sorting purposes
 
     /**
      * Returns an instance of the {@code CollectionKeeper} class.
@@ -24,7 +23,7 @@ public class CollectionKeeper {
     public CollectionKeeper(Collection<Route> collection){
         this.creationDate = LocalDateTime.now();
         this.collection = new HashSet<>(collection);
-        this.mirrorList = new ArrayList<>(collection);
+        this.mirror = new TreeSet<>(collection);
     }
 
     /**
@@ -34,24 +33,16 @@ public class CollectionKeeper {
     public void addElement(Route element) {
         Objects.requireNonNull(element);
         collection.add(element);
-        mirrorList.add(element);
+        mirror.add(element);
     }
 
     /**
      * Removes an existing element from the collection.
      * @param element the element to be removed from the collection
-     * @return {@code true} if the element was in the collection and was removed, {@code false} otherwise
      */
-    @SuppressWarnings("UnusedReturnValue")
-    public boolean removeElement(Route element) {
-        if (collection.contains(element)) {
-            collection.remove(element);
-            mirrorList.remove(element);
-            return true;
-        } else {
-            return false;
-        }
-
+    public void removeElement(Route element) {
+        collection.remove(element);
+        mirror.remove(element);
     }
 
     /**
@@ -59,7 +50,7 @@ public class CollectionKeeper {
      */
     public void clearCollection() {
         collection.clear();
-        mirrorList.clear();
+        mirror.clear();
     }
 
     /**
@@ -99,8 +90,8 @@ public class CollectionKeeper {
      * Returns an {@link ArrayList} containing the elements from the collection.
      * @return an {@link ArrayList} containing the elements from the collection
      */
-    public ArrayList<Route> copyMirror() {
-        return new ArrayList<>(mirrorList);
+    public TreeSet<Route> copyMirror() {
+        return mirror;
     }
 
     /**
@@ -151,8 +142,7 @@ public class CollectionKeeper {
      * @return the element (object) with the minimum distance
      */
     public Route getMinElement() {
-        Collections.sort(mirrorList);
-        return mirrorList.get(0);
+        return mirror.first();
     }
 
     /**
@@ -160,8 +150,7 @@ public class CollectionKeeper {
      * @return the element (object) with the maximum distance
      */
     public Route getMaxElement() {
-        Collections.sort(mirrorList);
-        return mirrorList.get(getCollectionSize() - 1);
+        return mirror.last();
     }
 
     /**
@@ -169,8 +158,8 @@ public class CollectionKeeper {
      * @param filter the string that must be contained in the names of the returned objects
      * @return an {@link ArrayList} of the filtered elements
      */
-    public ArrayList<Route> filterByString(String filter) {
-        ArrayList<Route> copyMirror = copyMirror();
+    public TreeSet<Route> filterByString(String filter) {
+        TreeSet<Route> copyMirror = copyMirror();
         copyMirror.removeIf(route -> !(route.getName().contains(filter)));
         return copyMirror;
     }
