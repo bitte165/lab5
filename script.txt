@@ -1,0 +1,4 @@
+help
+show
+asdfadsf
+history

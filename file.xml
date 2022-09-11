@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<collection>
+    <route>
+        <name>Ride home</name>
+        <coordinates>
+            <x>100</x>
+            <y>100</y>
+        </coordinates>
+        <from>
+            <x>100</x>
+            <y>0</y>
+            <z>100</z>
+            <name>unnamed</name>
+        </from>
+        <to>
+            <x>0</x>
+            <y>0</y>
+            <z>0</z>
+            <name>unnamed</name>
+        </to>
+    </route>
+    <route>
+        <name>Ride</name>
+        <coordinates>
+            <x>100</x>
+            <y>100</y>
+        </coordinates>
+        <from>
+            <x>100</x>
+            <y>0</y>
+            <z>100</z>
+            <name>unnamed</name>
+        </from>
+        <to>
+            <x>0</x>
+            <y>-100</y>
+            <z>0</z>
+            <name>unnamed</name>
+        </to>
+    </route>
+</collection>
