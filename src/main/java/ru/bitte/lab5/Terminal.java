@@ -11,10 +11,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * The class {@code Terminal} serves as the main logic part of the program. An object of this class carries out the task
@@ -84,7 +81,7 @@ public class Terminal {
     @SuppressWarnings("FieldCanBeLocal")
     private final CollectionKeeper collection;
     private final HashMap<String, Command> commands;
-    private final ArrayList<String> history;
+    private final ArrayDeque<String> history;
 
     /**
      * Constructs an instance of the {@code Terminal} class, reading {@link Route} elements from an XML file and adding
@@ -105,7 +102,7 @@ public class Terminal {
         // initialize the collection keeper with a file
         collection = new CollectionKeeper(parser.readFromFile(file));
         // initialize the commands by first getting them in a hashset and then adding to a hashmap in a loop
-        history = new ArrayList<>(15);
+        history = new ArrayDeque<>(15);
         commands = new HashMap<>();
         HashSet<Command> tempComs = new HashSet<>();
         tempComs.add(new AddCommand(collection));
@@ -220,14 +217,11 @@ public class Terminal {
      * @param command the name of a command
      */
     public void addToHistory(String command) {
-        if (history.size() < 15) {
-            history.add(command);
-        } else {
+        if (history.size() == 15) {
             // if the capacity reaches 15, remove the oldest element
-            assert history.size() == 15;
-            history.remove(0);
-            history.add(command);
+            history.removeFirst();
         }
+        history.add(command);
     }
 
     /**
