@@ -3,10 +3,8 @@ package ru.bitte.lab5.commands;
 
 import ru.bitte.lab5.Terminal;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
+
 
 /**
  * An object of this class is used in {@link Terminal} as a command that outputs the list of available commands and
@@ -14,20 +12,20 @@ import java.util.Iterator;
  * @implNote A no-argument command
  */
 public class HelpCommand extends Command {
-    private final HashMap<String, Command> commands;
+    private final Map<String, Command> commands;
 
     /**
      * Constructs a {@code HelpCommand} object.
      * @param commands the reference to a {@link HashMap} holding the commands
      */
-    public HelpCommand(HashMap<String, Command> commands) {
+    public HelpCommand(Map<String, Command> commands) {
         super("help", "list all available commands");
         this.commands = commands;
     }
 
     @Override
     public void run() {
-        ArrayList<Command> commandsObjects = new ArrayList<>(commands.values());
+        List<Command> commandsObjects = new ArrayList<>(commands.values());
         commandsObjects.sort(Comparator.comparing(Command::getName));
         System.out.println("Available commands:");
         Iterator<Command> iterator = commandsObjects.iterator();

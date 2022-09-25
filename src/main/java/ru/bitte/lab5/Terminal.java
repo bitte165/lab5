@@ -80,8 +80,8 @@ public class Terminal {
     private final Scanner in;
     @SuppressWarnings("FieldCanBeLocal")
     private final CollectionKeeper collection;
-    private final HashMap<String, Command> commands;
-    private final ArrayDeque<String> history;
+    private final Map<String, Command> commands;
+    private final Deque<String> history;
 
     /**
      * Constructs an instance of the {@code Terminal} class, reading {@link Route} elements from an XML file and adding
@@ -121,9 +121,7 @@ public class Terminal {
         tempComs.add(new SaveCommand(collection, parser));
         tempComs.add(new ShowCommand(collection));
         tempComs.add(new UpdateCommand(collection));
-        for (Command c : tempComs) {
-            commands.put(c.getName(), c);
-        }
+        tempComs.forEach(command -> commands.put(command.getName(), command));
     }
 
     /**

@@ -4,6 +4,7 @@ import ru.bitte.lab5.CollectionKeeper;
 import ru.bitte.lab5.Terminal;
 import ru.bitte.lab5.route.Route;
 
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -29,7 +30,7 @@ public class AddIfMinCommand extends ElementCommand {
 
     @Override
     public void run() {
-        Route min = collection.getMinElement();
+        Route min = Collections.min(collection.copySorted());
         if (getElement().getDistance() < min.getDistance()) {
             collection.addElement(Objects.requireNonNull(getElement()));
             System.out.printf("Added %s to the collection\n", getElement().getName());

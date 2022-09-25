@@ -4,7 +4,7 @@ import ru.bitte.lab5.CollectionKeeper;
 import ru.bitte.lab5.Terminal;
 import ru.bitte.lab5.route.Route;
 
-import java.util.TreeSet;
+import java.util.Set;
 
 /**
  * An object of this class is used in {@link Terminal} as a command that prints all the elements in the maintained
@@ -27,7 +27,7 @@ public class PrintAscendingCommand extends Command {
     @Override
     public void run() {
         System.out.println("Collection elements in the ascending order:");
-        TreeSet<Route> mirror = collection.copyMirror();
+        Set<Route> mirror = collection.copySorted();
         for (Route element : mirror) {
             System.out.println(element.format());
         }

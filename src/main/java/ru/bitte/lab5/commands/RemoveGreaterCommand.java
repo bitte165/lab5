@@ -4,7 +4,7 @@ import ru.bitte.lab5.CollectionKeeper;
 import ru.bitte.lab5.Terminal;
 import ru.bitte.lab5.route.Route;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -32,7 +32,7 @@ public class RemoveGreaterCommand extends ElementCommand {
     public void run() {
         Scanner in = new Scanner(System.in);
         // gets the elements the distance of which is greater than of the provided one
-        ArrayList<Route> greaterElements = collection.getElementsGreaterThan(getElement());
+        List<Route> greaterElements = collection.getElementsGreaterThan(getElement());
         int n = greaterElements.size();
         System.out.printf("Are you sure you want to remove %d elements from the collection? [Y/n]: ", n);
         String response = in.nextLine();

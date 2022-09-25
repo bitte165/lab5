@@ -5,6 +5,8 @@ import ru.bitte.lab5.exceptions.GetByIDException;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * An object of this class holds a collection of elements and provides an interface for accessing and modifying them.
@@ -14,7 +16,6 @@ import java.util.*;
 public class CollectionKeeper {
     private final HashSet<Route> collection; // main collection
     private final LocalDateTime creationDate;
-    private final TreeSet<Route> mirror; // mirrors the collection for sorting purposes
 
     /**
      * Returns an instance of the {@code CollectionKeeper} class.
@@ -23,7 +24,6 @@ public class CollectionKeeper {
     public CollectionKeeper(Collection<Route> collection){
         this.creationDate = LocalDateTime.now();
         this.collection = new HashSet<>(collection);
-        this.mirror = new TreeSet<>(collection);
     }
 
     /**
@@ -31,9 +31,7 @@ public class CollectionKeeper {
      * @param element the {@code Route} to be put in the collection
      */
     public void addElement(Route element) {
-        Objects.requireNonNull(element);
-        collection.add(element);
-        mirror.add(element);
+        collection.add(Objects.requireNonNull(element));
     }
 
     /**
@@ -41,8 +39,7 @@ public class CollectionKeeper {
      * @param element the element to be removed from the collection
      */
     public void removeElement(Route element) {
-        collection.remove(element);
-        mirror.remove(element);
+        collection.remove(Objects.requireNonNull(element));
     }
 
     /**
@@ -50,7 +47,6 @@ public class CollectionKeeper {
      */
     public void clearCollection() {
         collection.clear();
-        mirror.clear();
     }
 
     /**
@@ -87,11 +83,11 @@ public class CollectionKeeper {
     }
 
     /**
-     * Returns an {@link ArrayList} containing the elements from the collection.
-     * @return an {@link ArrayList} containing the elements from the collection
+     * Returns a {@link TreeSet} containing the elements from the collection.
+     * @return a {@link TreeSet} containing the elements from the collection
      */
-    public TreeSet<Route> copyMirror() {
-        return mirror;
+    public TreeSet<Route> copySorted() {
+        return new TreeSet<>(collection);
     }
 
     /**
@@ -138,30 +134,13 @@ public class CollectionKeeper {
     }
 
     /**
-     * Returns an element from the collection that has the minimum {@code distance} field among the entire collection.
-     * @return the element (object) with the minimum distance
-     */
-    public Route getMinElement() {
-        return mirror.first();
-    }
-
-    /**
-     * Returns an element from the collection that has the maximum {@code distance} field among the entire collection.
-     * @return the element (object) with the maximum distance
-     */
-    public Route getMaxElement() {
-        return mirror.last();
-    }
-
-    /**
      * Returns a list of the elements from the collection that have a particular substring in the name.
      * @param filter the string that must be contained in the names of the returned objects
      * @return an {@link ArrayList} of the filtered elements
      */
-    public TreeSet<Route> filterByString(String filter) {
-        TreeSet<Route> copyMirror = copyMirror();
-        copyMirror.removeIf(route -> !(route.getName().contains(filter)));
-        return copyMirror;
+    public List<Route> filterByString(String filter) {
+        Stream<Route> elements = collection.stream();
+        return elements.filter(route -> !(route.getName().contains(filter))).collect(Collectors.toList());
     }
 
     /**
@@ -170,14 +149,8 @@ public class CollectionKeeper {
      * @param element the element the distance is compared to other elements
      * @return an {@link ArrayList} of the greater distance elements
      */
-    public ArrayList<Route> getElementsGreaterThan(Route element) {
-        ArrayList<Route> elements = new ArrayList<>();
-        double curDist = element.getDistance();
-        for (Route route : collection) {
-            if (route.getDistance() > curDist) {
-                elements.add(route);
-            }
-        }
-        return elements;
+    public List<Route> getElementsGreaterThan(Route element) {
+        Stream<Route> elements = collection.stream();
+        return elements.filter(route -> route.getDistance() > element.getDistance()).collect(Collectors.toList());
     }
 }

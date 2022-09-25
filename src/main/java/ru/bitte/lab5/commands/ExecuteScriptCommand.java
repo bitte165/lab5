@@ -18,6 +18,7 @@ import java.util.Scanner;
  */
 public class ExecuteScriptCommand extends ArgumentCommand {
     private final Terminal terminal;
+    private int recursionDepth = 0;
 
     /**
      * Constructs a {@code ExecuteScriptCommand} object.
@@ -30,25 +31,33 @@ public class ExecuteScriptCommand extends ArgumentCommand {
 
     @Override
     public void run() {
-        System.out.printf("Executing %s...\n", getArgument());
-        try (Scanner script = new Scanner(new File(getArgument()))) {
-            // scans the next line in the file
-            while (script.hasNextLine()) {
-                String commandRaw = script.nextLine();
-                try {
-                    // parses the command using the terminal and runs it
-                    Command command = terminal.parseCommand(commandRaw);
-                    terminal.addToHistory(command.getName());
-                    command.run();
-                } catch (CommandParsingException e) {
-                    // skips the command if it can't be executed (caught an exception while parsing)
-                    System.out.println("Can't parse the following command: " + commandRaw);
-                    System.out.println("Moving onto the next one...");
+        recursionDepth++;
+        if (recursionDepth <= 2) {
+            System.out.printf("Executing %s...\n", getArgument());
+            try (Scanner script = new Scanner(new File(getArgument()))) {
+                // scans the next line in the file
+                while (script.hasNextLine()) {
+                    String commandRaw = script.nextLine();
+                    try {
+                        // parses the command using the terminal and runs it
+                        Command command = terminal.parseCommand(commandRaw);
+                        terminal.addToHistory(command.getName());
+                        command.run();
+                    } catch (CommandParsingException e) {
+                        // skips the command if it can't be executed (caught an exception while parsing)
+                        System.out.println("Can't parse the following command: " + commandRaw);
+                        System.out.println("Moving onto the next one...");
+                    }
                 }
+            } catch (FileNotFoundException e) {
+                System.out.println("No file with such a name found. Please try again with an existing file.");
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("No file with such a name found. Please try again with an existing file.");
+            System.out.println("Finished the script execution.");
+            recursionDepth--;
+        } else {
+            System.out.println("Can't execute several self-executing scripts, the recursion is too deep!");
+            System.out.println("Skipping this script call...");
+            recursionDepth--;
         }
-        System.out.println("Finished the script execution.");
     }
 }

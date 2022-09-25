@@ -4,8 +4,7 @@ import ru.bitte.lab5.CollectionKeeper;
 import ru.bitte.lab5.Terminal;
 import ru.bitte.lab5.route.Route;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * An object of this class is used in {@link Terminal} as a command that prints all the unique distance values of the
@@ -26,18 +25,8 @@ public class PrintUniqueCommand extends Command {
 
     @Override
     public void run() {
-        // extracts the unique distance values
-        ArrayList<Integer> values = new ArrayList<>();
-        for (Route element : collection.copyCollection()) {
-            if (!(values.contains(element.getDistance()))) { // doesn't add a value if it's already present
-                values.add(element.getDistance());
-            }
-        }
-        Collections.sort(values);
-        for (int i=0; i < values.size() - 1; i++) {
-            System.out.print(values.get(i) + ", ");
-        }
-        // prints the last entry without a comma at the end
-        System.out.println(values.get(values.size() - 1));
+        // get the distance values, keep only distinct, sort and join with a comma
+        System.out.println(collection.copyCollection().stream().map(Route::getDistance)
+                .distinct().sorted().map(x -> Integer.toString(x)).collect(Collectors.joining(", ")));
     }
 }

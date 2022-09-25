@@ -4,8 +4,8 @@ import ru.bitte.lab5.CollectionKeeper;
 import ru.bitte.lab5.Terminal;
 import ru.bitte.lab5.route.Route;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.TreeSet;
 
 /**
  * An object of this class is used in {@link Terminal} as a command that filters the elements of the collection by their
@@ -31,9 +31,7 @@ public class FilterCommand extends ArgumentCommand {
     @Override
     public void run() {
         System.out.printf("Elements in the collection containing \"%s\" in the name:\n", getArgument());
-        TreeSet<Route> filteredRoutes = collection.filterByString(Objects.requireNonNull(getArgument()));
-        for (Route element : filteredRoutes) {
-            System.out.println(element.format());
-        }
+        List<Route> filteredRoutes = collection.filterByString(Objects.requireNonNull(getArgument()));
+        filteredRoutes.stream().map(Route::format).forEach(System.out::println);
     }
 }
